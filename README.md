@@ -1,45 +1,51 @@
 # Factory Repair Network MVP
 
-Fast MVP for dispatching industrial repair technicians in Indian factory hubs.
+Minimal full-stack MVP for dispatching technicians to factory repair requests.
 
-## Stack
-- FastAPI backend (`main.py`) on port `8000`
-- SQLite database (`factory_repair.db`)
-- Twilio voice webhook at `/webhook/twilio`
-- Edge TTS (`edge-tts`) for spoken response generation
-- React + Vite admin dashboard in `frontend/` on port `5173`
+## Project Structure
 
-## Backend setup
+- `backend/main.py` - FastAPI app and API endpoints
+- `backend/models.py` - Pydantic request/response models
+- `backend/database.py` - SQLite schema, initialization, and seeding
+- `backend/intent.py` - keyword-based intent classification
+- `frontend/index.html` - React SPA via CDN (no build step)
+- `requirements.txt`
+
+## Features
+
+- Twilio webhook endpoint: `POST /webhook/twilio`
+  - Classifies caller issue intent (HVAC, Plumbing, Electrical, Pest, Industrial)
+  - Generates voice response with `edge-tts` using `en-IN-NatashaNeural`
+  - Returns TwiML with audio playback URL
+- Technician lookup: `GET /api/technicians?specialty=X&city=Y`
+- Job creation: `POST /api/jobs`
+- Job listing: `GET /api/jobs`
+- Admin stats: `GET /api/stats?admin_password=admin123`
+
+## Local Run
+
+1. Install dependencies:
+
 ```bash
-python3 -m venv .venv
-.venv/bin/pip install fastapi uvicorn edge-tts python-multipart
-.venv/bin/uvicorn main:app --reload --port 8000
+pip3 install -r requirements.txt
 ```
 
-## Frontend setup
+2. Start backend:
+
 ```bash
-cd frontend
-npm install
-npm run dev
+python3 -m uvicorn backend.main:app --reload --port 8000 --host 0.0.0.0
 ```
 
-## Admin routes
-- `/admin` login (MVP hardcoded password check)
-- `/admin/calls`
-- `/admin/jobs`
-- `/admin/technicians`
-- `/admin/factories`
+3. Open frontend in browser:
 
-Default admin password in backend: `factory123`
+`frontend/index.html`
 
-## API endpoints
-- `POST /webhook/twilio`
-- `POST /api/intent`
-- `GET /api/technicians?specialty=X&city=Y`
-- `POST /api/jobs`
-- `GET /api/jobs/{id}`
-- `GET /api/stats`
-- `GET /api/calls`
-- `GET /api/jobs`
-- `GET/POST /api/technicians`
-- `GET/POST /api/factories`
+## Seeded Data
+
+- 5 factories in: Jamshedpur, Dhanbad, Ranchi, Bokaro, Hazaribagh
+- 10 technicians (2 per specialty)
+- 20 sample jobs
+
+## Admin Password
+
+- `admin123`

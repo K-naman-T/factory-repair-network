@@ -2,12 +2,144 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Factory Repair Network MVP</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      :root { font-family: Arial, sans-serif; }
+      body { margin: 0; background: #f5f7fb; color: #222; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+      .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06); }
+      h1, h2 { margin-top: 0; }
+      .grid { display: grid; gap: 10px; }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      input, select, button { padding: 10px; border-radius: 8px; border: 1px solid #d5d9e0; width: 100%; box-sizing: border-box; }
+      button { background: #1f6feb; color: #fff; border: none; cursor: pointer; }
+      button:hover { background: #1758b9; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eceff4; }
+      .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+      .pill { background: #eef4ff; border-radius: 8px; padding: 10px; }
+      @media (max-width: 900px) {
+        .grid-2, .stats { grid-template-columns: 1fr; }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="text/babel">
+      const API = "http://localhost:8000";
+
+      function App() {
+        const [specialty, setSpecialty] = React.useState("");
+        const [city, setCity] = React.useState("");
+        const [techs, setTechs] = React.useState([]);
+        const [jobs, setJobs] = React.useState([]);
+        const [stats, setStats] = React.useState(null);
+        const [adminPassword, setAdminPassword] = React.useState("admin123");
+        const [form, setForm] = React.useState({ factory_id: 1, specialty_needed: "HVAC", cost: 0 });
+
+        const loadJobs = async () => {
+          const res = await fetch(`${API}/api/jobs`);
+          setJobs(await res.json());
+        };
+
+        const searchTechs = async () => {
+          const params = new URLSearchParams();
+          if (specialty) params.set("specialty", specialty);
+          if (city) params.set("city", city);
+          const res = await fetch(`${API}/api/technicians?${params.toString()}`);
+          setTechs(await res.json());
+        };
+
+        const createJob = async (e) => {
+          e.preventDefault();
+          await fetch(`${API}/api/jobs`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...form, factory_id: Number(form.factory_id), cost: Number(form.cost) }),
+          });
+          await loadJobs();
+        };
+
+        const loadStats = async () => {
+          const res = await fetch(`${API}/api/stats?admin_password=${encodeURIComponent(adminPassword)}`);
+          if (!res.ok) {
+            alert("Invalid admin password");
+            return;
+          }
+          setStats(await res.json());
+        };
+
+        React.useEffect(() => { loadJobs(); searchTechs(); }, []);
+
+        return (
+          <div className="container">
+            <h1>Factory Repair Network MVP</h1>
+
+            <div className="card">
+              <h2>Find Technicians</h2>
+              <div className="grid grid-2">
+                <input placeholder="Specialty (HVAC, Plumbing...)" value={specialty} onChange={(e) => setSpecialty(e.target.value)} />
+                <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+              </div>
+              <div style={{ marginTop: "10px" }}><button onClick={searchTechs}>Search</button></div>
+              <table>
+                <thead><tr><th>Name</th><th>Specialty</th><th>City</th><th>Phone</th><th>Available</th><th>Rating</th></tr></thead>
+                <tbody>
+                  {techs.map((t) => (<tr key={t.id}><td>{t.name}</td><td>{t.specialty}</td><td>{t.city}</td><td>{t.phone}</td><td>{t.available ? "Yes" : "No"}</td><td>{t.rating}</td></tr>))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="card">
+              <h2>Create Job</h2>
+              <form onSubmit={createJob} className="grid grid-2">
+                <input type="number" min="1" placeholder="Factory ID" value={form.factory_id} onChange={(e) => setForm({ ...form, factory_id: e.target.value })} />
+                <select value={form.specialty_needed} onChange={(e) => setForm({ ...form, specialty_needed: e.target.value })}>
+                  <option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pest</option><option>Industrial</option>
+                </select>
+                <input type="number" min="0" placeholder="Cost" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} />
+                <button type="submit">Create</button>
+              </form>
+            </div>
+
+            <div className="card">
+              <h2>Jobs</h2>
+              <table>
+                <thead><tr><th>ID</th><th>Factory</th><th>Tech</th><th>Specialty</th><th>Status</th><th>Cost</th></tr></thead>
+                <tbody>
+                  {jobs.map((j) => (<tr key={j.id}><td>{j.id}</td><td>{j.factory_id}</td><td>{j.technician_id ?? "-"}</td><td>{j.specialty_needed}</td><td>{j.status}</td><td>{j.cost}</td></tr>))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="card">
+              <h2>Admin Stats</h2>
+              <div className="grid grid-2">
+                <input type="password" placeholder="Admin Password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} />
+                <button onClick={loadStats}>Load Stats</button>
+              </div>
+              {stats && (
+                <div>
+                  <div className="stats" style={{ marginTop: "10px" }}>
+                    <div className="pill">Factories: {stats.total_factories}</div>
+                    <div className="pill">Technicians: {stats.total_technicians}</div>
+                    <div className="pill">Jobs: {stats.total_jobs}</div>
+                    <div className="pill">Open: {stats.open_jobs}</div>
+                    <div className="pill">Resolved: {stats.resolved_jobs}</div>
+                  </div>
+                  <pre>{JSON.stringify(stats.jobs_by_specialty, null, 2)}</pre>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
   </body>
 </html>
