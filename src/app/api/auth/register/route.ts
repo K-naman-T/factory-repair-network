@@ -4,7 +4,8 @@ import { hashPassword, createSession } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, name, role } = await request.json()
+    const body = await request.json()
+    const { email, password, name, role } = body
     if (!email || !password || !name || !role) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
@@ -18,6 +19,38 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.create({
       data: { email, password: hashedPassword, role, name },
     })
+
+    if (role === 'technician') {
+      const { specialty, city, phone } = body
+      if (!specialty || !city) {
+        await prisma.user.delete({ where: { id: user.id } })
+        return NextResponse.json({ error: 'Specialty and city required for technicians' }, { status: 400 })
+      }
+      await prisma.technician.create({
+        data: {
+          name,
+          email,
+          specialty,
+          city,
+          phone: phone || '',
+        },
+      })
+    } else if (role === 'factory') {
+      const { factoryName, address, city, phone } = body
+      if (!factoryName || !city) {
+        await prisma.user.delete({ where: { id: user.id } })
+        return NextResponse.json({ error: 'Factory name and city required for factory owners' }, { status: 400 })
+      }
+      await prisma.factory.create({
+        data: {
+          name: factoryName,
+          address: address || '',
+          city,
+          phone: phone || '',
+          email,
+        },
+      })
+    }
 
     await createSession(user.id, user.role, user.name)
 
