@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { hashPassword } from '@/lib/auth'
 
 async function main() {
   // Create Factories
@@ -85,9 +86,9 @@ async function main() {
   await prisma.job.create({ data: { factoryId: bokaroSteel.id, technicianId: techPest2.id, specialtyNeeded: 'Pest', description: 'Termite treatment completed', status: 'resolved', resolvedAt: new Date('2026-06-03') } })
 
   // Create Users
-  await prisma.user.create({ data: { email: 'admin@fixforge.in', password: 'admin123', role: 'admin', name: 'Admin User' } })
-  await prisma.user.create({ data: { email: 'owner@tatasteel.in', password: 'pass123', role: 'factory', name: 'Factory Owner' } })
-  await prisma.user.create({ data: { email: 'aman.singh@fixforge.in', password: 'pass123', role: 'technician', name: 'Aman Singh' } })
+  await prisma.user.create({ data: { email: 'admin@fixforge.in', password: await hashPassword('admin123'), role: 'admin', name: 'Admin User' } })
+  await prisma.user.create({ data: { email: 'owner@tatasteel.in', password: await hashPassword('pass123'), role: 'factory', name: 'Factory Owner' } })
+  await prisma.user.create({ data: { email: 'aman.singh@fixforge.in', password: await hashPassword('pass123'), role: 'technician', name: 'Aman Singh' } })
 
   // Create Call Logs
   await prisma.callLog.create({ data: { phone: '+91-98765-40001', intent: 'Job assignment confirmation', transcript: 'Confirmed availability for chiller servicing at Tata Steel Jamshedpur.' } })
