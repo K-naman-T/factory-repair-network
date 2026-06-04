@@ -37,7 +37,9 @@ model Job {
   technicianId    Int?
   specialtyNeeded String
   description     String
+  // Valid values: "open" | "assigned" | "in_progress" | "resolved" | "cancelled"
   status          String    @default("open")
+  // Valid values: "low" | "normal" | "high" | "critical"
   urgency         String    @default("normal")
   cost            Float     @default(0)
   createdAt       DateTime  @default(now())
