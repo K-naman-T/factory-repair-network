@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState('')
+  const [role, setRole] = useState<string>('')
   const [specialty, setSpecialty] = useState('')
   const [factoryName, setFactoryName] = useState('')
   const [city, setCity] = useState('')
@@ -101,7 +101,7 @@ export default function RegisterPage() {
             </div>
             <div className="space-y-2">
               <Label>Role</Label>
-              <Select value={role} onValueChange={setRole} required>
+              <Select value={role} onValueChange={(v) => setRole(v ?? '')} required>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
