@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -97,10 +97,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 md:px-6">
-          <SheetTrigger className="md:hidden inline-flex items-center justify-center rounded-lg hover:bg-muted size-8 shrink-0">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="md:hidden inline-flex items-center justify-center rounded-lg hover:bg-muted size-8 shrink-0"
+          >
             <Menu className="size-5" />
             <span className="sr-only">Toggle navigation</span>
-          </SheetTrigger>
+          </button>
 
           <div className="flex flex-1 items-center justify-end gap-3">
             <div className="flex items-center gap-2">
