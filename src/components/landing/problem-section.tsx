@@ -45,17 +45,7 @@ export function ProblemSection() {
           </div>
         </BlurFade>
 
-        <div className="mt-6 mx-auto max-w-lg text-center">
-          <BlurFade inView delay={0.15}>
-            <div className="inline-flex items-center gap-3 rounded-xl border bg-[#1e1b17] px-6 py-3 shadow-sm border-[#2a2620]">
-              <span className="text-3xl font-bold text-[#d4782a]">9/10</span>
-              <div className="text-left">
-                <p className="text-sm font-medium text-[#e8e4de]">Factory Owners Affected</p>
-                <p className="text-xs text-[#9e9790]">Multi-day production halts</p>
-              </div>
-            </div>
-          </BlurFade>
-        </div>
+
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {painPoints.map((point, i) => (
