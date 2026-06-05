@@ -51,7 +51,7 @@ export function ProblemSection() {
               <span className="text-3xl font-bold text-[#d4782a]">78.5</span>
               <div className="text-left">
                 <p className="text-sm font-medium text-[#e8e4de]">Severity Score</p>
-                <p className="text-xs text-[#9e9790]">Razorpay FixMyItch Index</p>
+                <p className="text-xs text-[#9e9790]">Industrial Repair Index</p>
               </div>
             </div>
           </BlurFade>

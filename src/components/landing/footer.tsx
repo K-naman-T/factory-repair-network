@@ -74,7 +74,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-[#2a2620] pt-6 text-center text-sm text-[#9e9790]">
-          <p>Built for the Razorpay FixMyItch Challenge</p>
+            <p>India's industrial repair network</p>
           <p className="mt-1">&copy; {new Date().getFullYear()} FixForge. All rights reserved.</p>
         </div>
       </div>

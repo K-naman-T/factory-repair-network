@@ -75,4 +75,4 @@ API_BASE_URL=http://localhost:4321 npx vitest run
 
 ## Built for
 
-Razorpay FixMyItch Challenge
+Industrial Repair Marketplace

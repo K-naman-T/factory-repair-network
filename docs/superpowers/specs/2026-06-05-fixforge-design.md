@@ -4,7 +4,7 @@
 
 When specialized machinery breaks down in small manufacturing units, owners face multi-day production halts because there is no on-demand network or marketplace connecting them with qualified industrial technicians who can diagnose and repair niche equipment quickly.
 
-**Severity Score:** 78.5/100 (Razorpay FixMyItch)
+**Severity Score:** 78.5/100
 **Category:** B2B Services
 
 ## Solution

@@ -146,7 +146,7 @@ Gradient or amber-tinted background
 ```
 bg-[#141210] text-[#9e9790]
 4-column nav: Product, Features, Company, Connect
-Copyright row: "Built for the Razorpay FixMyItch Challenge"
+Copyright row: "India's industrial repair network"
 ```
 
 ## Components

@@ -15,7 +15,7 @@ export function Hero() {
           <div className="flex-1 md:max-w-xl lg:max-w-2xl">
             <BlurFade delay={0.1} inView>
               <div className="mb-6 inline-flex items-center rounded-full border border-[#d4782a]/30 bg-[#d4782a]/5 px-4 py-1.5 text-[0.6875rem] font-medium uppercase tracking-[0.15em] text-[#d4782a]">
-                Razorpay FixMyItch Challenge
+                Industrial Repair Marketplace
               </div>
             </BlurFade>
 
@@ -91,7 +91,7 @@ export function Hero() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-white">Severity Score</p>
-                    <p className="text-xs text-white/70">Razorpay FixMyItch Index</p>
+                    <p className="text-xs text-white/70">Industrial Repair Index</p>
                   </div>
                 </div>
               </div>
