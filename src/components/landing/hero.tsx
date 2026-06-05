@@ -52,14 +52,29 @@ export function Hero() {
           </BlurFade>
 
           <BlurFade delay={0.4} inView className="mt-16">
-            <div className="relative mx-auto max-w-3xl overflow-hidden rounded-xl border bg-card shadow-sm">
-              <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-muted to-card p-8">
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4">
-                    <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    Live Demo
+            <div className="relative mx-auto max-w-4xl overflow-hidden rounded-xl border bg-card shadow-sm">
+              <div className="grid md:grid-cols-2 divide-x">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src="/images/hero-industrial.jpg"
+                    alt="Engineer inspecting industrial machinery"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <p className="text-sm font-medium text-white/90">Expert technicians on demand</p>
                   </div>
-                  <p className="text-lg text-muted-foreground">Platform dashboard preview</p>
+                </div>
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src="/images/tech-repair.jpg"
+                    alt="Technician repairing factory equipment"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <p className="text-sm font-medium text-white/90">Same-day service across 5 cities</p>
+                  </div>
                 </div>
               </div>
               <BorderBeam size={200} duration={8} colorFrom="#6366f1" colorTo="#8b5cf6" />

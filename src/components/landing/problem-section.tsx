@@ -58,10 +58,10 @@ export function ProblemSection() {
           </BlurFade>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {painPoints.map((point, i) => (
             <BlurFade key={point.title} inView delay={0.2 + i * 0.1}>
-              <div className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-colors hover:border-primary/50">
+              <div className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-colors hover:border-destructive/50 h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
                   <point.icon className="h-6 w-6" />
                 </div>
@@ -71,6 +71,24 @@ export function ProblemSection() {
             </BlurFade>
           ))}
         </div>
+
+        <BlurFade inView delay={0.5} className="mt-12">
+          <div className="relative overflow-hidden rounded-xl">
+            <img
+              src="/images/mechanic-helmet.jpg"
+              alt="Factory worker needing urgent repair"
+              className="h-64 w-full object-cover md:h-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
+              <div className="p-8 md:p-12 max-w-lg">
+                <p className="text-lg font-semibold text-white md:text-xl">
+                  &ldquo;We lost 3 days of production waiting for a single repair. That&apos;s ₹12 lakhs in downtime.&rdquo;
+                </p>
+                <p className="mt-2 text-sm text-white/70">— Factory Owner, Jharkhand Industrial Belt</p>
+              </div>
+            </div>
+          </div>
+        </BlurFade>
       </div>
     </section>
   )

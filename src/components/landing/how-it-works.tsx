@@ -8,23 +8,38 @@ const steps = [
   {
     Icon: ClipboardList,
     name: "Report",
-    description: "Factory owner describes the issue in 30 seconds through our simple form.",
+    description: "Factory owner describes the issue in 30 seconds through our simple form. No phone tag, no waiting.",
     className: "md:col-span-1",
-    background: <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent" />,
+    background: (
+      <div className="absolute inset-0">
+        <img src="/images/mechanic-helmet.jpg" alt="" className="h-full w-full object-cover opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/40 via-transparent to-transparent" />
+      </div>
+    ),
   },
   {
     Icon: GitCompare,
     name: "Match",
-    description: "System matches the best technician by specialty & location using AI-powered dispatch.",
+    description: "System matches the best technician by specialty & location using AI-powered smart dispatch.",
     className: "md:col-span-1",
-    background: <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent" />,
+    background: (
+      <div className="absolute inset-0">
+        <img src="/images/workers-control-panel.jpg" alt="" className="h-full w-full object-cover opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/40 via-transparent to-transparent" />
+      </div>
+    ),
   },
   {
     Icon: Wrench,
     name: "Fix",
-    description: "Technician arrives, diagnoses, and resolves the issue — verified through the platform.",
+    description: "Technician arrives, diagnoses, and resolves the issue — all tracked and verified through the platform.",
     className: "md:col-span-1",
-    background: <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent" />,
+    background: (
+      <div className="absolute inset-0">
+        <img src="/images/tech-repair.jpg" alt="" className="h-full w-full object-cover opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/40 via-transparent to-transparent" />
+      </div>
+    ),
   },
 ]
 
