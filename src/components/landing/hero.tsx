@@ -46,7 +46,7 @@ export function Hero() {
             <BlurFade delay={0.25} inView className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/register">
                 <ShimmerButton
-                  shimmerColor="#ffffff"
+                  shimmerColor="#fdf0e3"
                   background="#d4782a"
                   className="text-sm px-8 py-3 rounded-full"
                 >
