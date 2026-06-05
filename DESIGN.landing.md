@@ -22,9 +22,9 @@ colors:
   error: "#c62828"
   badge-severity: "#c62828"
 typography:
-  heading: "Geist, Inter, system-ui, sans-serif"
-  body: "Geist, Inter, system-ui, sans-serif"
-  mono: "Geist Mono, JetBrains Mono, ui-monospace, monospace"
+  heading: "Plus Jakarta Sans, system-ui, sans-serif"
+  body: "Plus Jakarta Sans, system-ui, sans-serif"
+  mono: "JetBrains Mono, ui-monospace, monospace"
   scale:
     hero: "4rem / 700"        # 64px
     hero-mobile: "2.25rem / 700"
