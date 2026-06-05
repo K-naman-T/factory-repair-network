@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ClipboardList, User, Menu, LogOut } from 'lucide-react'
 import { Toaster } from '@/components/ui/sonner'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 const navItems = [
   { href: '/technician', label: 'My Assignments', icon: ClipboardList, exact: true },
@@ -108,6 +109,7 @@ export default function TechnicianShell({ children }: { children: React.ReactNod
               </Avatar>
               <span className="hidden text-sm font-medium sm:inline">{userName || 'Loading...'}</span>
             </div>
+            <ThemeToggle />
             <Button variant="ghost" size="icon-sm" onClick={handleLogout}>
               <LogOut className="size-4" />
               <span className="sr-only">Logout</span>

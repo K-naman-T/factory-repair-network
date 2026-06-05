@@ -1,51 +1,64 @@
-# Factory Repair Network MVP
+# FixForge — Industrial Repair Marketplace
 
-Minimal full-stack MVP for dispatching technicians to factory repair requests.
+> From breakdown to fix in hours, not days.
 
-## Project Structure
-
-- `backend/main.py` - FastAPI app and API endpoints
-- `backend/models.py` - Pydantic request/response models
-- `backend/database.py` - SQLite schema, initialization, and seeding
-- `backend/intent.py` - keyword-based intent classification
-- `frontend/index.html` - React SPA via CDN (no build step)
-- `requirements.txt`
+India's first on-demand marketplace connecting factory owners with qualified industrial repair technicians.
 
 ## Features
 
-- Twilio webhook endpoint: `POST /webhook/twilio`
-  - Classifies caller issue intent (HVAC, Plumbing, Electrical, Pest, Industrial)
-  - Generates voice response with `edge-tts` using `en-IN-NatashaNeural`
-  - Returns TwiML with audio playback URL
-- Technician lookup: `GET /api/technicians?specialty=X&city=Y`
-- Job creation: `POST /api/jobs`
-- Job listing: `GET /api/jobs`
-- Admin stats: `GET /api/stats?admin_password=admin123`
+- **Landing Page** — Animated pitch page with MagicUI components
+- **Factory Dashboard** — Post jobs, browse technicians, track status
+- **Technician Dashboard** — Accept/decline jobs, update status, manage profile
+- **Admin Panel** — Dispatch board, manage technicians & factories, view call logs
+- **Dark Mode** — Full dark mode support across all pages
+- **Responsive** — Works on mobile, tablet, and desktop
 
-## Local Run
+## Tech Stack
+
+- Next.js 15 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui + MagicUI
+- Prisma + SQLite
+- next-themes (dark mode)
+
+## Setup
 
 1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-pip3 install -r requirements.txt
-```
+2. Set up database:
+   ```bash
+   npx prisma migrate dev
+   npx prisma db seed
+   ```
 
-2. Start backend:
+3. Start development server:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-python3 -m uvicorn backend.main:app --reload --port 8000 --host 0.0.0.0
-```
+4. Open http://localhost:3000
 
-3. Open frontend in browser:
+## Test Accounts
 
-`frontend/index.html`
+- **Admin:** admin@fixforge.in / admin123
+- **Factory Owner:** owner@tatasteel.in / pass123
+- **Technician:** aman.singh@fixforge.in / pass123
 
-## Seeded Data
+## API Endpoints
 
-- 5 factories in: Jamshedpur, Dhanbad, Ranchi, Bokaro, Hazaribagh
-- 10 technicians (2 per specialty)
-- 20 sample jobs
+- `POST /api/auth/login` — Login
+- `POST /api/auth/register` — Register
+- `GET /api/jobs` — List jobs
+- `POST /api/jobs` — Create job
+- `GET /api/technicians` — List technicians
+- `GET /api/factories` — List factories
+- `GET /api/stats` — Dashboard stats
 
-## Admin Password
+## Built for
 
-- `admin123`
+Razorpay FixMyItch Challenge
