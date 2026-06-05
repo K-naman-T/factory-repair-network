@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-const baseURL = 'http://localhost:3000'
+const baseURL = process.env.API_BASE_URL || 'http://localhost:3000'
 
 describe('Auth API Routes', () => {
   it('POST /api/auth/register should create a new factory user', async () => {

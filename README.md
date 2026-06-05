@@ -37,11 +37,25 @@ India's first on-demand marketplace connecting factory owners with qualified ind
    ```
 
 3. Start development server:
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 
 4. Open http://localhost:3000
+
+### Custom Port
+
+Use the `PORT` env var to run on a different port:
+
+```bash
+PORT=4321 npm run dev
+```
+
+Then set `API_BASE_URL` when running tests:
+
+```bash
+API_BASE_URL=http://localhost:4321 npx vitest run
+```
 
 ## Test Accounts
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-const baseURL = 'http://localhost:3000'
+const baseURL = process.env.API_BASE_URL || 'http://localhost:3000'
 
 describe('Technicians API Routes', () => {
   it('GET /api/technicians should return all technicians', async () => {
