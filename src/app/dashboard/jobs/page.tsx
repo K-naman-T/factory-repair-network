@@ -2,15 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-import { Search, PlusCircle } from 'lucide-react'
+import { Search, PlusCircle, ClipboardList } from 'lucide-react'
 import Link from 'next/link'
 
 interface Job {
@@ -27,11 +25,18 @@ interface Job {
   factory?: { id: number; name: string } | null
 }
 
-const statusColors: Record<string, string> = {
-  open: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-  assigned: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-  in_progress: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-  resolved: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    open: 'bg-[#e8eef5] text-[#1e3a5f]',
+    assigned: 'bg-[#fdf0e3] text-[#d4782a]',
+    in_progress: 'bg-[#fdf0e3] text-[#d4782a]',
+    resolved: 'bg-[#e8f5ec] text-[#2d7d46]',
+  }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${styles[status] || 'bg-[#f8f7f5] text-[#4a4540]'}`}>
+      {status.replace('_', ' ')}
+    </span>
+  )
 }
 
 const specialties = ['HVAC', 'Plumbing', 'Electrical', 'Pest', 'Industrial']
@@ -100,7 +105,7 @@ export default function JobsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">My Jobs</h1>
         <Link href="/dashboard/jobs/new">
-          <Button>
+          <Button className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
             <PlusCircle className="mr-2 size-4" />
             Post Job
           </Button>
@@ -108,19 +113,19 @@ export default function JobsPage() {
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="flex flex-wrap items-center gap-3 pt-4">
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px] p-4">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-2.5 size-4 text-[#8a8580]" />
             <Input
               placeholder="Search jobs..."
-              className="pl-8"
+              className="pl-8 bg-white border-[#d4d0ca] rounded-[8px] text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v ?? '')}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] bg-white border-[#d4d0ca] rounded-[8px] text-[0.9375rem] text-[#1a1a1a] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition">
               <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
@@ -131,7 +136,7 @@ export default function JobsPage() {
             </SelectContent>
           </Select>
           <Select value={specialtyFilter} onValueChange={(v) => setSpecialtyFilter(v ?? '')}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] bg-white border-[#d4d0ca] rounded-[8px] text-[0.9375rem] text-[#1a1a1a] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition">
               <SelectValue placeholder="All specialties" />
             </SelectTrigger>
             <SelectContent>
@@ -141,101 +146,96 @@ export default function JobsPage() {
               ))}
             </SelectContent>
           </Select>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Jobs Table */}
-      <Card>
-        <CardContent className="p-0">
-          {filteredJobs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <p className="text-sm text-muted-foreground">
-                No jobs yet. Post your first repair job!
-              </p>
-              <Link href="/dashboard/jobs/new">
-                <Button variant="outline" className="mt-4">
-                  <PlusCircle className="mr-2 size-4" />
-                  Post a Job
-                </Button>
-              </Link>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Specialty</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="hidden md:table-cell">Technician</TableHead>
-                  <TableHead className="hidden md:table-cell">Created</TableHead>
-                  <TableHead className="text-right">Cost</TableHead>
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px] overflow-hidden">
+        {filteredJobs.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <ClipboardList className="size-12 text-[#8a8580] mb-4" />
+            <p className="text-[0.9375rem] text-[#4a4540]">
+              No jobs yet. Post your first repair job.
+            </p>
+            <Link href="/dashboard/jobs/new">
+              <Button className="mt-4 bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
+                <PlusCircle className="mr-2 size-4" />
+                Post a Job
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-[#f8f7f5]">
+                <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">ID</TableHead>
+                <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Specialty</TableHead>
+                <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Status</TableHead>
+                <TableHead className="hidden md:table-cell px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Technician</TableHead>
+                <TableHead className="hidden md:table-cell px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Created</TableHead>
+                <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider text-right">Cost</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredJobs.map((job) => (
+                <TableRow
+                  key={job.id}
+                  className="cursor-pointer transition-colors hover:bg-[#f8f7f5]"
+                  onClick={() => setSelectedJob(job)}
+                >
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a] font-medium">#{job.id}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{job.specialtyNeeded}</TableCell>
+                  <TableCell className="px-4 py-3">
+                    <StatusBadge status={job.status} />
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">
+                    {job.technician?.name || '—'}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{formatDate(job.createdAt)}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a] text-right">₹{job.cost.toLocaleString()}</TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredJobs.map((job) => (
-                  <TableRow
-                    key={job.id}
-                    className="cursor-pointer"
-                    onClick={() => setSelectedJob(job)}
-                  >
-                    <TableCell className="font-medium">#{job.id}</TableCell>
-                    <TableCell>{job.specialtyNeeded}</TableCell>
-                    <TableCell>
-                      <Badge className={statusColors[job.status] || ''}>
-                        {job.status.replace('_', ' ')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {job.technician?.name || '—'}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">{formatDate(job.createdAt)}</TableCell>
-                    <TableCell className="text-right">₹{job.cost.toLocaleString()}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </div>
 
       {/* Job Detail Dialog */}
       <Dialog open={!!selectedJob} onOpenChange={(open) => { if (!open) setSelectedJob(null) }}>
         {selectedJob && (
-          <DialogContent>
+          <DialogContent className="bg-white rounded-[16px] p-8 max-w-lg w-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08)]">
             <DialogHeader>
-              <DialogTitle>Job #{selectedJob.id}</DialogTitle>
-              <DialogDescription>{selectedJob.specialtyNeeded}</DialogDescription>
+              <DialogTitle className="text-[1.125rem] font-semibold text-[#1a1a1a] mb-2">Job #{selectedJob.id}</DialogTitle>
+              <DialogDescription className="text-[0.9375rem] text-[#4a4540]">{selectedJob.specialtyNeeded}</DialogDescription>
             </DialogHeader>
-            <div className="space-y-3 text-sm">
-              <div>
-                <span className="font-medium">Status: </span>
-                <Badge className={statusColors[selectedJob.status] || ''}>
-                  {selectedJob.status.replace('_', ' ')}
-                </Badge>
+            <div className="space-y-4 text-[0.9375rem] text-[#1a1a1a]">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-[#4a4540]">Status:</span>
+                <StatusBadge status={selectedJob.status} />
               </div>
               <div>
-                <span className="font-medium">Urgency: </span>
+                <span className="font-medium text-[#4a4540]">Urgency: </span>
                 {selectedJob.urgency}
               </div>
               <div>
-                <span className="font-medium">Description: </span>
-                <p className="mt-1 text-muted-foreground">{selectedJob.description}</p>
+                <span className="font-medium text-[#4a4540]">Description: </span>
+                <p className="mt-1 text-[0.9375rem] text-[#4a4540]">{selectedJob.description}</p>
               </div>
               <div>
-                <span className="font-medium">Technician: </span>
+                <span className="font-medium text-[#4a4540]">Technician: </span>
                 {selectedJob.technician?.name || 'Not assigned'}
               </div>
               <div>
-                <span className="font-medium">Cost: </span>
+                <span className="font-medium text-[#4a4540]">Cost: </span>
                 ₹{selectedJob.cost.toLocaleString()}
               </div>
               <div>
-                <span className="font-medium">Created: </span>
+                <span className="font-medium text-[#4a4540]">Created: </span>
                 {formatDate(selectedJob.createdAt)}
               </div>
               {selectedJob.resolvedAt && (
                 <div>
-                  <span className="font-medium">Resolved: </span>
+                  <span className="font-medium text-[#4a4540]">Resolved: </span>
                   {formatDate(selectedJob.resolvedAt)}
                 </div>
               )}

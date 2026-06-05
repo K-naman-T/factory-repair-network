@@ -1,6 +1,6 @@
 "use client"
 
-import { AlertTriangle, Factory, Ban, Warehouse } from "lucide-react"
+import { Factory, Ban, Warehouse } from "lucide-react"
 import { BlurFade } from "@/components/ui/blur-fade"
 
 const painPoints = [
@@ -23,12 +23,11 @@ const painPoints = [
 
 export function ProblemSection() {
   return (
-    <section className="bg-background py-20 md:py-28 relative">
+    <section className="bg-[#141210] py-20 md:py-28 relative text-[#e8e4de]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <BlurFade inView>
           <div className="mx-auto max-w-2xl text-center">
-            <span className="inline-flex items-center rounded-full bg-destructive/10 px-3 py-1 text-sm font-medium text-destructive">
-              <AlertTriangle className="mr-1.5 h-3.5 w-3.5" />
+            <span className="inline-flex items-center rounded-full border border-[#d4782a]/30 bg-[#d4782a]/5 px-4 py-1.5 text-[0.6875rem] font-medium uppercase tracking-[0.15em] text-[#d4782a]">
               The Problem
             </span>
           </div>
@@ -36,11 +35,11 @@ export function ProblemSection() {
 
         <BlurFade inView delay={0.1}>
           <div className="mt-4 mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-[#e8e4de] md:text-4xl">
               Industrial repair in India is{" "}
-              <span className="text-destructive">broken</span>
+              <span className="text-[#c62828]">broken</span>
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-[#9e9790]">
               Factory equipment breaks down daily, yet there&apos;s no organized way to find, vet, and dispatch repair technicians.
             </p>
           </div>
@@ -48,11 +47,11 @@ export function ProblemSection() {
 
         <div className="mt-6 mx-auto max-w-lg text-center">
           <BlurFade inView delay={0.15}>
-            <div className="inline-flex items-center gap-3 rounded-xl border bg-card px-6 py-3 shadow-sm">
-              <span className="text-3xl font-bold text-destructive">78.5</span>
+            <div className="inline-flex items-center gap-3 rounded-xl border border-[#2a2620] bg-[#1e1b17] px-6 py-3">
+              <span className="text-3xl font-bold text-[#d4782a]">78.5</span>
               <div className="text-left">
-                <p className="text-sm font-medium">Severity Score</p>
-                <p className="text-xs text-muted-foreground">Razorpay FixMyItch Index</p>
+                <p className="text-sm font-medium text-[#e8e4de]">Severity Score</p>
+                <p className="text-xs text-[#9e9790]">Razorpay FixMyItch Index</p>
               </div>
             </div>
           </BlurFade>
@@ -61,19 +60,19 @@ export function ProblemSection() {
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {painPoints.map((point, i) => (
             <BlurFade key={point.title} inView delay={0.2 + i * 0.1}>
-              <div className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-colors hover:border-destructive/50 h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+              <div className="group relative overflow-hidden rounded-[12px] border border-[#2a2620] bg-[#1e1b17] p-6 h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#d4782a]/10 text-[#d4782a]">
                   <point.icon className="h-6 w-6" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold">{point.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{point.description}</p>
+                <h3 className="mt-4 text-lg font-semibold text-[#e8e4de]">{point.title}</h3>
+                <p className="mt-2 text-sm text-[#9e9790]">{point.description}</p>
               </div>
             </BlurFade>
           ))}
         </div>
 
         <BlurFade inView delay={0.5} className="mt-12">
-          <div className="relative overflow-hidden rounded-xl">
+          <div className="relative overflow-hidden rounded-[12px]">
             <img
               src="/images/mechanic-helmet.jpg"
               alt="Factory worker needing urgent repair"

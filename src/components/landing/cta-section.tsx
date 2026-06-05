@@ -7,8 +7,8 @@ import { BlurFade } from "@/components/ui/blur-fade"
 
 export function CTASection() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-28">
-      <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-primary to-blue-600" />
+    <section className="relative overflow-hidden py-24 bg-[#d4782a]">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#d4782a] via-[#e8943a] to-[#d4782a]" />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEwIDIwbDEwLTEwIDEwIDEwIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==')] opacity-20" />
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
@@ -26,7 +26,7 @@ export function CTASection() {
             <ShimmerButton
               shimmerColor="#ffffff"
               background="rgba(255, 255, 255, 0.15)"
-              className="text-base px-10 py-3 border-white/20"
+              className="text-[1rem] font-medium px-10 py-3 rounded-full"
             >
               Get Started Free
               <ArrowRight className="ml-2 h-4 w-4" />

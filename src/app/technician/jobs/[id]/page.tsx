@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import { ArrowLeft, MapPin, Phone, Building2, Clock, CheckCircle2, Wrench } from 'lucide-react'
@@ -38,17 +36,32 @@ interface Job {
   technician?: Technician | null
 }
 
-const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'ghost' }> = {
-  assigned: { label: 'Pending Acceptance', variant: 'secondary' },
-  in_progress: { label: 'In Progress', variant: 'outline' },
-  resolved: { label: 'Completed', variant: 'ghost' },
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, { label: string; className: string }> = {
+    assigned: { label: 'Pending Acceptance', className: 'bg-[#fdf0e3] text-[#d4782a]' },
+    in_progress: { label: 'In Progress', className: 'bg-[#fdf0e3] text-[#d4782a]' },
+    resolved: { label: 'Completed', className: 'bg-[#e8f5ec] text-[#2d7d46]' },
+  }
+  const s = styles[status] || { label: status.replace('_', ' '), className: 'bg-[#f8f7f5] text-[#4a4540]' }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${s.className}`}>
+      {s.label}
+    </span>
+  )
 }
 
-const urgencyVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  low: 'secondary',
-  normal: 'default',
-  high: 'destructive',
-  critical: 'destructive',
+function UrgencyBadge({ urgency }: { urgency: string }) {
+  const styles: Record<string, string> = {
+    low: 'bg-[#f8f7f5] text-[#4a4540]',
+    normal: 'bg-[#e8eef5] text-[#1e3a5f]',
+    high: 'bg-[#fdf0e3] text-[#d4782a]',
+    critical: 'bg-[#f9e8e8] text-[#c62828]',
+  }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${styles[urgency] || 'bg-[#f8f7f5] text-[#4a4540]'}`}>
+      {urgency}
+    </span>
+  )
 }
 
 function formatDate(dateStr: string) {
@@ -154,39 +167,36 @@ export default function JobDetailPage() {
         Back to Assignments
       </Button>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-lg">Job #{job.id}</CardTitle>
-              <p className="text-sm text-muted-foreground">{job.specialtyNeeded}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant={urgencyVariant[job.urgency] || 'outline'}>{job.urgency}</Badge>
-              <Badge variant={statusConfig[job.status]?.variant || 'outline'}>
-                {statusConfig[job.status]?.label || job.status}
-              </Badge>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px] p-6">
+        <div className="flex items-start justify-between mb-6">
           <div>
-            <h3 className="mb-2 text-sm font-medium">Issue Description</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{job.description}</p>
+            <h3 className="text-[1.125rem] font-semibold text-[#1a1a1a]">Job #{job.id}</h3>
+            <p className="text-[0.875rem] text-[#4a4540] mt-0.5">{job.specialtyNeeded}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <UrgencyBadge urgency={job.urgency} />
+            <StatusBadge status={job.status} />
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-[0.875rem] font-medium text-[#1a1a1a] mb-2">Issue Description</h4>
+            <p className="text-[0.9375rem] text-[#4a4540] leading-relaxed">{job.description}</p>
           </div>
 
-          <div className="rounded-lg border p-4 space-y-3">
-            <h3 className="text-sm font-medium">Factory Details</h3>
-            <div className="grid gap-2 text-sm sm:grid-cols-2">
-              <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="bg-white border border-[#d4d0ca] rounded-[8px] p-4 space-y-3">
+            <h4 className="text-[0.875rem] font-medium text-[#1a1a1a]">Factory Details</h4>
+            <div className="grid gap-2 text-[0.9375rem] sm:grid-cols-2">
+              <div className="flex items-center gap-2 text-[#4a4540]">
                 <Building2 className="size-4 shrink-0" />
                 <span>{job.factory.name}</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex items-center gap-2 text-[#4a4540]">
                 <MapPin className="size-4 shrink-0" />
                 <span>{job.factory.address}, {job.factory.city}</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex items-center gap-2 text-[#4a4540]">
                 <Phone className="size-4 shrink-0" />
                 <span>{job.factory.phone}</span>
               </div>
@@ -194,7 +204,7 @@ export default function JobDetailPage() {
           </div>
 
           <div>
-            <h3 className="mb-3 text-sm font-medium">Timeline</h3>
+            <h4 className="text-[0.875rem] font-medium text-[#1a1a1a] mb-3">Timeline</h4>
             <div className="space-y-2">
               {timelineSteps.map((step, idx) => {
                 const Icon = step.icon
@@ -203,20 +213,20 @@ export default function JobDetailPage() {
                 return (
                   <div key={step.key} className="flex items-center gap-3">
                     <div className={`flex size-8 items-center justify-center rounded-full ${
-                      isActive ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
+                      isActive ? 'bg-[#e8eef5] text-[#1e3a5f]' : 'bg-[#f8f7f5] text-[#8a8580]'
                     }`}>
                       <Icon className="size-4" />
                     </div>
                     <div className="flex-1">
-                      <p className={`text-sm font-medium ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      <p className={`text-[0.9375rem] font-medium ${isActive ? 'text-[#1a1a1a]' : 'text-[#8a8580]'}`}>
                         {step.label}
                         {isCurrent && ' (Current)'}
                       </p>
                       {step.key === 'created' && (
-                        <p className="text-xs text-muted-foreground">{formatDate(job.createdAt)}</p>
+                        <p className="text-[0.8125rem] text-[#4a4540]">{formatDate(job.createdAt)}</p>
                       )}
                       {step.key === 'resolved' && job.resolvedAt && (
-                        <p className="text-xs text-muted-foreground">{formatDate(job.resolvedAt)}</p>
+                        <p className="text-[0.8125rem] text-[#4a4540]">{formatDate(job.resolvedAt)}</p>
                       )}
                     </div>
                   </div>
@@ -225,28 +235,28 @@ export default function JobDetailPage() {
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-2">
             {job.status === 'assigned' && (
               <>
-                <Button className="bg-green-600 hover:bg-green-700" onClick={() => handleStatusUpdate('in_progress')}>
+                <Button className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]" onClick={() => handleStatusUpdate('in_progress')}>
                   Accept Job
                 </Button>
-                <Button variant="destructive" onClick={() => handleStatusUpdate('cancelled')}>
+                <Button variant="destructive" className="rounded-[8px]" onClick={() => handleStatusUpdate('cancelled')}>
                   Decline
                 </Button>
               </>
             )}
             {job.status === 'in_progress' && (
-              <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => handleStatusUpdate('resolved')}>
+              <Button className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]" onClick={() => handleStatusUpdate('resolved')}>
                 Mark Resolved
               </Button>
             )}
             {job.status === 'resolved' && (
-              <p className="text-sm text-muted-foreground">This job has been completed.</p>
+              <p className="text-[0.9375rem] text-[#4a4540]">This job has been completed.</p>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

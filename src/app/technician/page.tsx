@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Briefcase, CheckCircle, IndianRupee, ClipboardList } from 'lucide-react'
 import { toast } from 'sonner'
@@ -44,17 +42,32 @@ interface Job {
   technician?: Technician | null
 }
 
-const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'ghost' }> = {
-  assigned: { label: 'Pending Acceptance', variant: 'secondary' },
-  in_progress: { label: 'In Progress', variant: 'outline' },
-  resolved: { label: 'Completed', variant: 'ghost' },
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, { label: string; className: string }> = {
+    assigned: { label: 'Pending Acceptance', className: 'bg-[#fdf0e3] text-[#d4782a]' },
+    in_progress: { label: 'In Progress', className: 'bg-[#fdf0e3] text-[#d4782a]' },
+    resolved: { label: 'Completed', className: 'bg-[#e8f5ec] text-[#2d7d46]' },
+  }
+  const s = styles[status] || { label: status.replace('_', ' '), className: 'bg-[#f8f7f5] text-[#4a4540]' }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${s.className}`}>
+      {s.label}
+    </span>
+  )
 }
 
-const urgencyVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  low: 'secondary',
-  normal: 'default',
-  high: 'destructive',
-  critical: 'destructive',
+function UrgencyBadge({ urgency }: { urgency: string }) {
+  const styles: Record<string, string> = {
+    low: 'bg-[#f8f7f5] text-[#4a4540]',
+    normal: 'bg-[#e8eef5] text-[#1e3a5f]',
+    high: 'bg-[#fdf0e3] text-[#d4782a]',
+    critical: 'bg-[#f9e8e8] text-[#c62828]',
+  }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${styles[urgency] || 'bg-[#f8f7f5] text-[#4a4540]'}`}>
+      {urgency}
+    </span>
+  )
 }
 
 function formatDate(dateStr: string) {
@@ -148,10 +161,10 @@ export default function TechnicianPage() {
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader><Skeleton className="h-4 w-24" /></CardHeader>
-              <CardContent><Skeleton className="h-8 w-16" /></CardContent>
-            </Card>
+            <div key={i} className="bg-white border border-[#d4d0ca] rounded-[12px] p-6">
+              <Skeleton className="h-4 w-24 mb-1" />
+              <Skeleton className="h-8 w-16" />
+            </div>
           ))}
         </div>
         {Array.from({ length: 3 }).map((_, i) => (
@@ -162,9 +175,9 @@ export default function TechnicianPage() {
   }
 
   const statCards = [
-    { title: 'Active Jobs', value: activeJobs, icon: Briefcase, color: 'text-blue-600' },
-    { title: 'Completed This Week', value: completedThisWeek, icon: CheckCircle, color: 'text-green-600' },
-    { title: 'Earnings', value: `₹${earnings.toLocaleString()}`, icon: IndianRupee, color: 'text-purple-600' },
+    { title: 'Active Jobs', value: activeJobs, icon: Briefcase },
+    { title: 'Completed This Week', value: completedThisWeek, icon: CheckCircle },
+    { title: 'Earnings', value: `₹${earnings.toLocaleString()}`, icon: IndianRupee },
   ]
 
   return (
@@ -178,77 +191,70 @@ export default function TechnicianPage() {
         {statCards.map((stat) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                <Icon className={`size-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{stat.value}</p>
-              </CardContent>
-            </Card>
+            <div key={stat.title} className="bg-white border border-[#d4d0ca] rounded-[12px] p-6">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[0.875rem] text-[#4a4540]">{stat.title}</p>
+                <Icon className="size-4 text-[#8a8580]" />
+              </div>
+              <p className="text-[1.75rem] font-semibold text-[#1a1a1a]">{stat.value}</p>
+            </div>
           )
         })}
       </div>
 
       {jobs.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <ClipboardList className="mb-4 size-12 text-muted-foreground/50" />
-            <p className="text-sm text-muted-foreground">
-              No assignments yet. We&apos;ll notify you when a job matches your specialty.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="bg-white border border-[#d4d0ca] rounded-[12px] p-12 flex flex-col items-center justify-center text-center">
+          <ClipboardList className="size-12 text-[#8a8580] mb-4" />
+          <p className="text-[0.9375rem] text-[#4a4540]">
+            No assignments yet. We&apos;ll notify you when a job matches your specialty.
+          </p>
+        </div>
       ) : (
         <div className="space-y-3">
           {jobs.map((job) => {
-            const config = statusConfig[job.status] || { label: job.status, variant: 'outline' as const }
             return (
-              <Card key={job.id} className="cursor-pointer transition-colors hover:bg-muted/50" onClick={() => router.push(`/technician/jobs/${job.id}`)}>
-                <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div key={job.id} className="bg-white border border-[#d4d0ca] rounded-[12px] p-4 cursor-pointer transition-colors hover:bg-[#f8f7f5]" onClick={() => router.push(`/technician/jobs/${job.id}`)}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0 flex-1 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium">{job.factory.name}</p>
-                      <Badge variant="outline" className="text-xs">{job.specialtyNeeded}</Badge>
-                      <Badge variant={urgencyVariant[job.urgency] || 'outline'} className="text-xs">
-                        {job.urgency}
-                      </Badge>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-[0.9375rem] font-medium text-[#1a1a1a]">{job.factory.name}</p>
+                      <span className="inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium bg-[#f8f7f5] text-[#4a4540]">{job.specialtyNeeded}</span>
+                      <UrgencyBadge urgency={job.urgency} />
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-[0.8125rem] text-[#4a4540]">
                       {job.description.slice(0, 100)}{job.description.length > 100 ? '...' : ''}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-[0.8125rem] text-[#8a8580]">
                       Created {formatDate(job.createdAt)}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 sm:flex-col sm:items-end">
-                    <Badge variant={config.variant}>{config.label}</Badge>
+                    <StatusBadge status={job.status} />
                     <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                       {job.status === 'assigned' && (
                         <>
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleStatusUpdate(job.id, 'in_progress')}>
+                          <Button size="sm" className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]" onClick={() => handleStatusUpdate(job.id, 'in_progress')}>
                             Accept Job
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => handleStatusUpdate(job.id, 'cancelled')}>
+                          <Button size="sm" variant="destructive" className="rounded-[8px]" onClick={() => handleStatusUpdate(job.id, 'cancelled')}>
                             Decline
                           </Button>
                         </>
                       )}
                       {job.status === 'in_progress' && (
-                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => handleStatusUpdate(job.id, 'resolved')}>
+                        <Button size="sm" className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]" onClick={() => handleStatusUpdate(job.id, 'resolved')}>
                           Mark Resolved
                         </Button>
                       )}
                       {job.status === 'resolved' && (
-                        <Button size="sm" variant="outline" onClick={() => router.push(`/technician/jobs/${job.id}`)}>
+                        <Button size="sm" variant="outline" className="rounded-[8px]" onClick={() => router.push(`/technician/jobs/${job.id}`)}>
                           View Summary
                         </Button>
                       )}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )
           })}
         </div>

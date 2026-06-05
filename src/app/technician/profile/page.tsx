@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import { Star, Save, ArrowLeft } from 'lucide-react'
+import { Star, Save, ArrowLeft, User } from 'lucide-react'
 
 interface Technician {
   id: number
@@ -124,62 +121,61 @@ export default function TechnicianProfilePage() {
         Back to Assignments
       </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px]">
+        <div className="p-6 border-b border-[#d4d0ca]">
+          <h3 className="text-[1rem] font-semibold text-[#1a1a1a]">Profile</h3>
+        </div>
+        <div className="p-6 space-y-6">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <p className="text-sm font-medium">{technician.name}</p>
+            <div>
+              <p className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1">Name</p>
+              <p className="text-[0.9375rem] text-[#1a1a1a]">{technician.name}</p>
             </div>
-            <div className="space-y-2">
-              <Label>Email</Label>
-              <p className="text-sm font-medium">{technician.email || '—'}</p>
+            <div>
+              <p className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1">Email</p>
+              <p className="text-[0.9375rem] text-[#1a1a1a]">{technician.email || '—'}</p>
             </div>
-            <div className="space-y-2">
-              <Label>Specialty</Label>
-              <div>
-                <Badge variant="outline">{technician.specialty}</Badge>
-              </div>
+            <div>
+              <p className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1">Specialty</p>
+              <span className="inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium bg-[#f8f7f5] text-[#4a4540]">{technician.specialty}</span>
             </div>
-            <div className="space-y-2">
-              <Label>City</Label>
-              <p className="text-sm font-medium">{technician.city}</p>
+            <div>
+              <p className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1">City</p>
+              <p className="text-[0.9375rem] text-[#1a1a1a]">{technician.city}</p>
             </div>
-            <div className="space-y-2">
-              <Label>Rating</Label>
+            <div>
+              <p className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1">Rating</p>
               {renderStars(technician.rating)}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+          <div>
+            <label htmlFor="phone" className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Phone Number</label>
             <Input
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Enter phone number"
+              className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
             />
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border p-3">
+          <div className="flex items-center justify-between bg-white border border-[#d4d0ca] rounded-[8px] p-3">
             <div>
-              <p className="text-sm font-medium">Available for new jobs</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[0.9375rem] font-medium text-[#1a1a1a]">Available for new jobs</p>
+              <p className="text-[0.8125rem] text-[#4a4540]">
                 {available ? 'You are visible for new assignments' : 'You are hidden from new assignments'}
               </p>
             </div>
             <Switch checked={available} onCheckedChange={setAvailable} />
           </div>
 
-          <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
+          <Button onClick={handleSave} disabled={saving} className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
             <Save className="mr-2 size-4" />
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

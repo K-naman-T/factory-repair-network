@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Briefcase, CheckCircle, IndianRupee, Clock, PlusCircle, ArrowRight } from 'lucide-react'
+import { Briefcase, CheckCircle, IndianRupee, Clock, PlusCircle, ArrowRight, ClipboardList } from 'lucide-react'
 
 interface Job {
   id: number
@@ -29,11 +27,18 @@ interface Stats {
   avgResolutionTime: string
 }
 
-const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline' | 'link' | 'ghost'> = {
-  open: 'default',
-  assigned: 'secondary',
-  in_progress: 'outline',
-  resolved: 'ghost',
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    open: 'bg-[#e8eef5] text-[#1e3a5f]',
+    assigned: 'bg-[#fdf0e3] text-[#d4782a]',
+    in_progress: 'bg-[#fdf0e3] text-[#d4782a]',
+    resolved: 'bg-[#e8f5ec] text-[#2d7d46]',
+  }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${styles[status] || 'bg-[#f8f7f5] text-[#4a4540]'}`}>
+      {status.replace('_', ' ')}
+    </span>
+  )
 }
 
 export default function DashboardPage() {
@@ -113,10 +118,10 @@ export default function DashboardPage() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader><Skeleton className="h-4 w-24" /></CardHeader>
-              <CardContent><Skeleton className="h-8 w-16" /></CardContent>
-            </Card>
+            <div key={i} className="bg-white border border-[#d4d0ca] rounded-[12px] p-6">
+              <Skeleton className="h-4 w-24 mb-1" />
+              <Skeleton className="h-8 w-16" />
+            </div>
           ))}
         </div>
       </div>
@@ -126,10 +131,10 @@ export default function DashboardPage() {
   const stats: Stats = { activeJobs, resolvedThisMonth, totalSpending, avgResolutionTime: String(avgResolutionTime) }
 
   const statCards = [
-    { title: 'Active Jobs', value: stats.activeJobs, icon: Briefcase, color: 'text-blue-600' },
-    { title: 'Resolved This Month', value: stats.resolvedThisMonth, icon: CheckCircle, color: 'text-green-600' },
-    { title: 'Total Spending', value: `₹${stats.totalSpending.toLocaleString()}`, icon: IndianRupee, color: 'text-purple-600' },
-    { title: 'Avg Resolution Time', value: stats.avgResolutionTime === '—' ? '—' : `${stats.avgResolutionTime}h`, icon: Clock, color: 'text-orange-600' },
+    { title: 'Active Jobs', value: stats.activeJobs, icon: Briefcase },
+    { title: 'Resolved This Month', value: stats.resolvedThisMonth, icon: CheckCircle },
+    { title: 'Total Spending', value: `₹${stats.totalSpending.toLocaleString()}`, icon: IndianRupee },
+    { title: 'Avg Resolution Time', value: stats.avgResolutionTime === '—' ? '—' : `${stats.avgResolutionTime}h`, icon: Clock },
   ]
 
   return (
@@ -148,69 +153,74 @@ export default function DashboardPage() {
         {statCards.map((stat) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                <Icon className={`size-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{stat.value}</p>
-              </CardContent>
-            </Card>
+            <div key={stat.title} className="bg-white border border-[#d4d0ca] rounded-[12px] p-6">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[0.875rem] text-[#4a4540]">{stat.title}</p>
+                <Icon className="size-4 text-[#8a8580]" />
+              </div>
+              <p className="text-[1.75rem] font-semibold text-[#1a1a1a]">{stat.value}</p>
+            </div>
           )
         })}
       </div>
 
       {/* Recent Activity + Quick Actions */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="lg:col-span-2 bg-white border border-[#d4d0ca] rounded-[12px]">
+          <div className="p-6 border-b border-[#d4d0ca]">
+            <h3 className="text-[1rem] font-semibold text-[#1a1a1a]">Recent Activity</h3>
+          </div>
+          <div className="p-6">
             {recentJobs.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No jobs yet.</p>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <ClipboardList className="size-12 text-[#8a8580] mb-4" />
+                <p className="text-[0.9375rem] text-[#4a4540]">No jobs yet.</p>
+                <Link href="/dashboard/jobs/new">
+                  <Button className="mt-4">
+                    <PlusCircle className="mr-2 size-4" />
+                    Post Your First Job
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <div className="space-y-3">
                 {recentJobs.map((job) => (
-                  <div key={job.id} className="flex items-center justify-between rounded-lg border p-3">
+                  <div key={job.id} className="bg-white border border-[#d4d0ca] rounded-[8px] p-3 flex items-center justify-between">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">
+                      <p className="truncate text-[0.9375rem] font-medium text-[#1a1a1a]">
                         {job.description.slice(0, 60)}{job.description.length > 60 ? '...' : ''}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-[0.8125rem] text-[#4a4540] mt-0.5">
                         {job.specialtyNeeded} &middot; {new Date(job.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <Badge variant={statusVariant[job.status] || 'outline'}>
-                      {job.status.replace('_', ' ')}
-                    </Badge>
+                    <StatusBadge status={job.status} />
                   </div>
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <div className="bg-white border border-[#d4d0ca] rounded-[12px]">
+          <div className="p-6 border-b border-[#d4d0ca]">
+            <h3 className="text-[1rem] font-semibold text-[#1a1a1a]">Quick Actions</h3>
+          </div>
+          <div className="p-6 space-y-3">
             <Link href="/dashboard/jobs/new">
-              <Button className="w-full">
+              <Button className="w-full bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
                 <PlusCircle className="mr-2 size-4" />
                 Post New Job
               </Button>
             </Link>
             <Link href="/dashboard/jobs">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full rounded-[8px]">
                 <ArrowRight className="mr-2 size-4" />
                 View All Jobs
               </Button>
             </Link>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   )

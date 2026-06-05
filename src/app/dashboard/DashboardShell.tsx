@@ -64,8 +64,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 active
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  ? 'bg-[#e8eef5] text-[#1e3a5f] font-medium'
+                  : 'text-[#4a4540] hover:bg-[#f8f7f5] hover:text-[#1a1a1a]'
               }`}
             >
               <Icon className="size-4" />
@@ -82,9 +82,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   )
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-[#f4f2ee]">
       <Toaster />
-      <aside className="hidden w-56 shrink-0 border-r bg-card md:block">
+      <aside className="hidden w-56 shrink-0 border-r border-[#d4d0ca] bg-white md:block">
         {sidebar}
       </aside>
 
@@ -96,7 +96,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       </Sheet>
 
       <div className="flex flex-1 flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-card px-4 md:px-6">
+        <header className="flex h-14 items-center gap-4 border-b border-[#d4d0ca] bg-white px-4 md:px-6">
           <button
             onClick={() => setMobileOpen(true)}
             className="md:hidden inline-flex items-center justify-center rounded-lg hover:bg-muted size-8 shrink-0"

@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
@@ -37,17 +35,34 @@ interface Technician {
 }
 
 const columns = [
-  { key: 'open', label: 'Open', color: 'bg-blue-500' },
-  { key: 'assigned', label: 'Assigned', color: 'bg-yellow-500' },
-  { key: 'in_progress', label: 'In Progress', color: 'bg-orange-500' },
-  { key: 'resolved', label: 'Resolved', color: 'bg-green-500' },
+  { key: 'open', label: 'Open', color: '#1e3a5f' },
+  { key: 'assigned', label: 'Assigned', color: '#d4782a' },
+  { key: 'in_progress', label: 'In Progress', color: '#d4782a' },
+  { key: 'resolved', label: 'Resolved', color: '#2d7d46' },
 ]
 
-const urgencyBadge: Record<string, 'default' | 'secondary' | 'destructive' | 'outline' | 'ghost'> = {
-  low: 'secondary',
-  normal: 'default',
-  high: 'destructive',
-  critical: 'destructive',
+function UrgencyBadge({ urgency }: { urgency: string }) {
+  const styles: Record<string, string> = {
+    low: 'bg-[#f8f7f5] text-[#4a4540]',
+    normal: 'bg-[#e8eef5] text-[#1e3a5f]',
+    high: 'bg-[#fdf0e3] text-[#d4782a]',
+    critical: 'bg-[#f9e8e8] text-[#c62828]',
+  }
+  return (
+    <span className={`inline-flex items-center rounded-[9999px] px-2.5 py-0.5 text-[0.75rem] font-medium ${styles[urgency] || 'bg-[#f8f7f5] text-[#4a4540]'}`}>
+      {urgency}
+    </span>
+  )
+}
+
+function StatusDot({ status }: { status: string }) {
+  const dotColors: Record<string, string> = {
+    open: 'bg-[#1e3a5f]',
+    assigned: 'bg-[#d4782a]',
+    in_progress: 'bg-[#d4782a]',
+    resolved: 'bg-[#2d7d46]',
+  }
+  return <span className={`inline-block size-2.5 rounded-full ${dotColors[status] || 'bg-[#8a8580]'}`} />
 }
 
 export default function DispatchPage() {
@@ -141,7 +156,7 @@ export default function DispatchPage() {
         <Skeleton className="h-8 w-48" />
         <div className="flex gap-4 overflow-x-auto pb-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="min-w-[280px] flex-1">
+            <div key={i} className="min-w-[280px] flex-1 bg-[#f8f7f5] rounded-[12px] p-4">
               <Skeleton className="h-6 w-24 mb-3" />
               <div className="space-y-3">
                 {Array.from({ length: 3 }).map((_, j) => (
@@ -168,36 +183,32 @@ export default function DispatchPage() {
         {columns.map((col) => {
           const colJobs = grouped[col.key as keyof typeof grouped]
           return (
-            <div key={col.key} className="min-w-[280px] flex-1">
-              <div className="mb-3 flex items-center gap-2">
-                <div className={`h-3 w-3 rounded-full ${col.color}`} />
-                <h3 className="font-semibold text-sm">{col.label}</h3>
-                <span className="text-xs text-muted-foreground">({colJobs.length})</span>
+            <div key={col.key} className="min-w-[280px] flex-1 bg-[#f8f7f5] rounded-[12px] p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-block size-2.5 rounded-full" style={{ backgroundColor: col.color }} />
+                <h3 className="text-[0.8125rem] font-semibold text-[#1a1a1a]">{col.label}</h3>
+                <span className="text-[0.75rem] text-[#8a8580]">({colJobs.length})</span>
               </div>
               <div className="space-y-3">
                 {colJobs.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-8 text-center">No jobs</p>
+                  <p className="text-[0.8125rem] text-[#8a8580] py-8 text-center">No jobs</p>
                 ) : (
                   colJobs.map((job) => (
-                    <Card key={job.id} size="sm">
-                      <CardHeader>
-                        <div className="flex items-start justify-between gap-2">
-                          <CardTitle className="text-sm">{job.factory.name}</CardTitle>
-                          <Badge variant={urgencyBadge[job.urgency] || 'default'} className="shrink-0">
-                            {job.urgency}
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        <p className="text-xs text-muted-foreground line-clamp-2">
+                    <div key={job.id} className="bg-white border border-[#d4d0ca] rounded-[8px] p-4 mb-3">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h4 className="text-[0.9375rem] font-medium text-[#1a1a1a]">{job.factory.name}</h4>
+                        <UrgencyBadge urgency={job.urgency} />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-[0.8125rem] text-[#4a4540] line-clamp-2">
                           {job.description}
                         </p>
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="flex items-center justify-between text-[0.75rem] text-[#8a8580]">
                           <span>{job.specialtyNeeded}</span>
                           <span>{new Date(job.createdAt).toLocaleDateString()}</span>
                         </div>
                         {job.technician && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-[0.75rem] text-[#4a4540]">
                             Assigned to: {job.technician.name}
                           </p>
                         )}
@@ -205,7 +216,7 @@ export default function DispatchPage() {
                           {job.status === 'open' && (
                             <Button
                               size="sm"
-                              className="w-full"
+                              className="w-full bg-[#d4782a] text-white hover:bg-[#e8943a] transition-colors rounded-[8px]"
                               onClick={() => setDispatchJob(job)}
                             >
                               Assign
@@ -214,8 +225,7 @@ export default function DispatchPage() {
                           {job.status === 'assigned' && (
                             <Button
                               size="sm"
-                              variant="secondary"
-                              className="w-full"
+                              className="w-full bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]"
                               onClick={() => handleStatusChange(job.id, 'in_progress')}
                             >
                               Start
@@ -225,15 +235,15 @@ export default function DispatchPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="w-full"
+                              className="w-full border-[#1e3a5f] text-[#1e3a5f] hover:bg-[#e8eef5] transition-colors rounded-[8px]"
                               onClick={() => handleStatusChange(job.id, 'resolved')}
                             >
                               Resolve
                             </Button>
                           )}
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   ))
                 )}
               </div>
@@ -243,23 +253,23 @@ export default function DispatchPage() {
       </div>
 
       <Dialog open={!!dispatchJob} onOpenChange={(open) => { if (!open) { setDispatchJob(null); setSelectedTech(null) } }}>
-        <DialogContent>
+        <DialogContent className="bg-white rounded-[16px] p-8 max-w-lg w-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08)]">
           <DialogHeader>
-            <DialogTitle>Dispatch Job</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[1.125rem] font-semibold text-[#1a1a1a] mb-2">Dispatch Job</DialogTitle>
+            <DialogDescription className="text-[0.9375rem] text-[#4a4540] mb-6">
               Select a technician to assign this job to.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 py-2">
+          <div className="space-y-4">
             {dispatchJob && (
-              <div className="rounded-lg border p-3 text-sm">
-                <p className="font-medium">{dispatchJob.factory.name}</p>
-                <p className="text-muted-foreground">{dispatchJob.description}</p>
-                <p className="text-muted-foreground">Specialty: {dispatchJob.specialtyNeeded}</p>
+              <div className="bg-white border border-[#d4d0ca] rounded-[8px] p-3">
+                <p className="text-[0.9375rem] font-medium text-[#1a1a1a]">{dispatchJob.factory.name}</p>
+                <p className="text-[0.8125rem] text-[#4a4540] mt-1">{dispatchJob.description}</p>
+                <p className="text-[0.8125rem] text-[#4a4540]">Specialty: {dispatchJob.specialtyNeeded}</p>
               </div>
             )}
             {matchingTechs.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-[0.9375rem] text-[#4a4540]">
                 No available technicians found for this specialty.
               </p>
             ) : (
@@ -267,10 +277,10 @@ export default function DispatchPage() {
                 {matchingTechs.map((tech) => (
                   <label
                     key={tech.id}
-                    className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 text-sm transition-colors ${
+                    className={`flex cursor-pointer items-center gap-3 bg-white border border-[#d4d0ca] rounded-[8px] p-3 text-[0.9375rem] transition-colors ${
                       selectedTech === tech.id
-                        ? 'border-primary bg-primary/5'
-                        : 'hover:bg-muted'
+                        ? 'border-[#1e3a5f] bg-[#e8eef5]'
+                        : 'hover:bg-[#f8f7f5]'
                     }`}
                   >
                     <input
@@ -279,11 +289,11 @@ export default function DispatchPage() {
                       value={tech.id}
                       checked={selectedTech === tech.id}
                       onChange={() => setSelectedTech(tech.id)}
-                      className="size-4 accent-primary"
+                      className="size-4 accent-[#1e3a5f]"
                     />
                     <div className="flex-1">
-                      <p className="font-medium">{tech.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="font-medium text-[#1a1a1a]">{tech.name}</p>
+                      <p className="text-[0.8125rem] text-[#4a4540]">
                         {tech.city} &middot; Rating: {tech.rating}
                       </p>
                     </div>
@@ -292,10 +302,11 @@ export default function DispatchPage() {
               </div>
             )}
           </div>
-          <DialogFooter showCloseButton>
+          <DialogFooter showCloseButton className="flex justify-end gap-3 pt-6 border-t border-[#d4d0ca]">
             <Button
               onClick={handleAssign}
               disabled={!selectedTech || dispatching}
+              className="bg-[#d4782a] text-white hover:bg-[#e8943a] transition-colors rounded-[8px]"
             >
               {dispatching ? 'Dispatching...' : 'Dispatch'}
             </Button>

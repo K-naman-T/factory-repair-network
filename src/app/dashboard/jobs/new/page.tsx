@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 
 const specialties = ['HVAC', 'Plumbing', 'Electrical', 'Pest', 'Industrial']
@@ -91,17 +90,17 @@ export default function NewJobPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Post a New Job</h1>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Job Details</CardTitle>
-          <CardDescription>Describe the repair issue and submit it for technicians.</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px]">
+        <div className="p-6 border-b border-[#d4d0ca]">
+          <h3 className="text-[1rem] font-semibold text-[#1a1a1a]">Job Details</h3>
+          <p className="text-[0.875rem] text-[#4a4540] mt-1">Describe the repair issue and submit it for technicians.</p>
+        </div>
+        <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Specialty Needed</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Specialty Needed</label>
               <Select value={specialty} onValueChange={(v) => setSpecialty(v ?? '')} required>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition">
                   <SelectValue placeholder="Select a specialty" />
                 </SelectTrigger>
                 <SelectContent>
@@ -112,10 +111,10 @@ export default function NewJobPage() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Urgency</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Urgency</label>
               <Select value={urgency} onValueChange={(v) => setUrgency(v ?? 'normal')}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -126,23 +125,24 @@ export default function NewJobPage() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Description</label>
               <Textarea
                 placeholder="Describe the issue..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 rows={4}
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={submitting || !factoryId}>
+            <Button type="submit" className="w-full bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]" disabled={submitting || !factoryId}>
               {submitting ? 'Submitting...' : 'Submit Job'}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

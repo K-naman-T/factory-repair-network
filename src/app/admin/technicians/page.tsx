@@ -3,9 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
@@ -23,7 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Users } from 'lucide-react'
 
 interface Technician {
   id: number
@@ -155,88 +153,88 @@ export default function AdminTechnicians() {
           <h1 className="text-2xl font-semibold tracking-tight">Technicians</h1>
           <p className="text-sm text-muted-foreground">Manage repair technicians.</p>
         </div>
-        <Button onClick={openAdd}>
+        <Button onClick={openAdd} className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
           <Plus className="mr-2 size-4" />
           Add Technician
         </Button>
       </div>
 
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px] overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-[#f8f7f5]">
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Name</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Specialty</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">City</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Phone</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Available</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Rating</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider w-24">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {technicians.length === 0 ? (
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Specialty</TableHead>
-                <TableHead>City</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Available</TableHead>
-                <TableHead>Rating</TableHead>
-                <TableHead className="w-24">Actions</TableHead>
+                <TableCell colSpan={7} className="px-4 py-8 text-center text-[0.9375rem] text-[#8a8580]">
+                  No technicians found.
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {technicians.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    No technicians found.
+            ) : (
+              technicians.map((tech) => (
+                <TableRow key={tech.id} className="transition-colors hover:bg-[#f8f7f5]">
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a] font-medium">{tech.name}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{tech.specialty}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{tech.city}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{tech.phone}</TableCell>
+                  <TableCell className="px-4 py-3">
+                    <span className="flex items-center gap-1.5 text-[0.9375rem] text-[#1a1a1a]">
+                      <span className={`inline-block size-2 rounded-full ${tech.available ? 'bg-[#2d7d46]' : 'bg-[#c62828]'}`} />
+                      {tech.available ? 'Available' : 'Busy'}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{tech.rating}</TableCell>
+                  <TableCell className="px-4 py-3">
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon-xs" onClick={() => openEdit(tech)}>
+                        <Pencil className="size-3" />
+                      </Button>
+                      <Button variant="ghost" size="icon-xs" onClick={() => setDeleteConfirm(tech)}>
+                        <Trash2 className="size-3 text-[#c62828]" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
-              ) : (
-                technicians.map((tech) => (
-                  <TableRow key={tech.id}>
-                    <TableCell className="font-medium">{tech.name}</TableCell>
-                    <TableCell>{tech.specialty}</TableCell>
-                    <TableCell>{tech.city}</TableCell>
-                    <TableCell>{tech.phone}</TableCell>
-                    <TableCell>
-                      <Badge variant={tech.available ? 'default' : 'secondary'}>
-                        {tech.available ? 'Available' : 'Busy'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{tech.rating}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon-xs" onClick={() => openEdit(tech)}>
-                          <Pencil className="size-3" />
-                        </Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setDeleteConfirm(tech)}>
-                          <Trash2 className="size-3 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white rounded-[16px] p-8 max-w-lg w-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08)]">
           <DialogHeader>
-            <DialogTitle>{editing ? 'Edit Technician' : 'Add Technician'}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[1.125rem] font-semibold text-[#1a1a1a] mb-2">{editing ? 'Edit Technician' : 'Add Technician'}</DialogTitle>
+            <DialogDescription className="text-[0.9375rem] text-[#4a4540] mb-6">
               {editing ? 'Update the technician details.' : 'Enter the details for the new technician.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
+          <div className="space-y-4">
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Name</label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Technician name"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Specialty</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Specialty</label>
               <Select
                 value={form.specialty}
                 onValueChange={(v) => v && setForm({ ...form, specialty: v })}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -246,25 +244,27 @@ export default function AdminTechnicians() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">City</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">City</label>
               <Input
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
                 placeholder="City"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Phone</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Phone</label>
               <Input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="Phone number"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
           </div>
-          <DialogFooter showCloseButton>
-            <Button onClick={handleSave} disabled={saving}>
+          <DialogFooter showCloseButton className="flex justify-end gap-3 pt-6 border-t border-[#d4d0ca]">
+            <Button onClick={handleSave} disabled={saving} className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
               {saving ? 'Saving...' : editing ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
@@ -272,18 +272,19 @@ export default function AdminTechnicians() {
       </Dialog>
 
       <Dialog open={!!deleteConfirm} onOpenChange={(open) => { if (!open) setDeleteConfirm(null) }}>
-        <DialogContent>
+        <DialogContent className="bg-white rounded-[16px] p-8 max-w-lg w-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08)]">
           <DialogHeader>
-            <DialogTitle>Delete Technician</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[1.125rem] font-semibold text-[#1a1a1a] mb-2">Delete Technician</DialogTitle>
+            <DialogDescription className="text-[0.9375rem] text-[#4a4540] mb-6">
               Are you sure you want to delete {deleteConfirm?.name}? This will unassign any open jobs.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter showCloseButton>
+          <DialogFooter showCloseButton className="flex justify-end gap-3 pt-6 border-t border-[#d4d0ca]">
             <Button
               variant="destructive"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleting}
+              className="rounded-[8px]"
             >
               {deleting ? 'Deleting...' : 'Delete'}
             </Button>

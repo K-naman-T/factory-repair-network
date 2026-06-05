@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
@@ -15,7 +14,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Building2 } from 'lucide-react'
 
 interface Factory {
   id: number
@@ -135,102 +134,104 @@ export default function AdminFactories() {
           <h1 className="text-2xl font-semibold tracking-tight">Factories</h1>
           <p className="text-sm text-muted-foreground">Manage registered factories.</p>
         </div>
-        <Button onClick={openAdd}>
+        <Button onClick={openAdd} className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
           <Plus className="mr-2 size-4" />
           Add Factory
         </Button>
       </div>
 
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
+      <div className="bg-white border border-[#d4d0ca] rounded-[12px] overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-[#f8f7f5]">
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Name</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Address</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">City</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Phone</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider">Jobs</TableHead>
+              <TableHead className="px-4 py-3 text-[0.8125rem] font-medium text-[#8a8580] uppercase tracking-wider w-24">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {factories.length === 0 ? (
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>City</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Jobs</TableHead>
-                <TableHead className="w-24">Actions</TableHead>
+                <TableCell colSpan={6} className="px-4 py-8 text-center text-[0.9375rem] text-[#8a8580]">
+                  No factories found.
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {factories.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    No factories found.
+            ) : (
+              factories.map((factory) => (
+                <TableRow key={factory.id} className="transition-colors hover:bg-[#f8f7f5]">
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a] font-medium">{factory.name}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{factory.address}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{factory.city}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a] font-mono">{factory.phone}</TableCell>
+                  <TableCell className="px-4 py-3 text-[0.9375rem] text-[#1a1a1a]">{factory._count?.jobs ?? 0}</TableCell>
+                  <TableCell className="px-4 py-3">
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon-xs" onClick={() => openEdit(factory)}>
+                        <Pencil className="size-3" />
+                      </Button>
+                      <Button variant="ghost" size="icon-xs" onClick={() => setDeleteConfirm(factory)}>
+                        <Trash2 className="size-3 text-[#c62828]" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
-              ) : (
-                factories.map((factory) => (
-                  <TableRow key={factory.id}>
-                    <TableCell className="font-medium">{factory.name}</TableCell>
-                    <TableCell>{factory.address}</TableCell>
-                    <TableCell>{factory.city}</TableCell>
-                    <TableCell>{factory.phone}</TableCell>
-                    <TableCell>{factory._count?.jobs ?? 0}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon-xs" onClick={() => openEdit(factory)}>
-                          <Pencil className="size-3" />
-                        </Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setDeleteConfirm(factory)}>
-                          <Trash2 className="size-3 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white rounded-[16px] p-8 max-w-lg w-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08)]">
           <DialogHeader>
-            <DialogTitle>{editing ? 'Edit Factory' : 'Add Factory'}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[1.125rem] font-semibold text-[#1a1a1a] mb-2">{editing ? 'Edit Factory' : 'Add Factory'}</DialogTitle>
+            <DialogDescription className="text-[0.9375rem] text-[#4a4540] mb-6">
               {editing ? 'Update the factory details.' : 'Enter the details for the new factory.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
+          <div className="space-y-4">
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Name</label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Factory name"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Address</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Address</label>
               <Input
                 value={form.address}
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
                 placeholder="Address"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">City</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">City</label>
               <Input
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
                 placeholder="City"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Phone</label>
+            <div>
+              <label className="text-[0.875rem] font-medium text-[#1a1a1a] mb-1.5 block">Phone</label>
               <Input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="Phone number"
+                className="bg-white border border-[#d4d0ca] rounded-[8px] px-3 py-2 text-[0.9375rem] text-[#1a1a1a] placeholder:text-[#8a8580] focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20 outline-none transition"
               />
             </div>
           </div>
-          <DialogFooter showCloseButton>
-            <Button onClick={handleSave} disabled={saving}>
+          <DialogFooter showCloseButton className="flex justify-end gap-3 pt-6 border-t border-[#d4d0ca]">
+            <Button onClick={handleSave} disabled={saving} className="bg-[#1e3a5f] text-white hover:bg-[#264d7a] transition-colors rounded-[8px]">
               {saving ? 'Saving...' : editing ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
@@ -238,18 +239,19 @@ export default function AdminFactories() {
       </Dialog>
 
       <Dialog open={!!deleteConfirm} onOpenChange={(open) => { if (!open) setDeleteConfirm(null) }}>
-        <DialogContent>
+        <DialogContent className="bg-white rounded-[16px] p-8 max-w-lg w-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08)]">
           <DialogHeader>
-            <DialogTitle>Delete Factory</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[1.125rem] font-semibold text-[#1a1a1a] mb-2">Delete Factory</DialogTitle>
+            <DialogDescription className="text-[0.9375rem] text-[#4a4540] mb-6">
               Are you sure you want to delete {deleteConfirm?.name}? This will also delete all associated jobs.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter showCloseButton>
+          <DialogFooter showCloseButton className="flex justify-end gap-3 pt-6 border-t border-[#d4d0ca]">
             <Button
               variant="destructive"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleting}
+              className="rounded-[8px]"
             >
               {deleting ? 'Deleting...' : 'Delete'}
             </Button>

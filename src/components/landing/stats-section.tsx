@@ -13,22 +13,22 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { icon: Building2, value: 500, suffix: "+", label: "Factories Served" },
+  { icon: Building2, value: 500, suffix: "+", label: "Factories" },
   { icon: Users, value: 200, suffix: "+", label: "Technicians" },
-  { icon: Clock, value: 24, suffix: "hr", label: "Average Response" },
-  { icon: Star, value: 4.8, suffix: "★", label: "Average Rating", decimals: 1 },
+  { icon: Clock, value: 24, suffix: "hr", label: "Response" },
+  { icon: Star, value: 4.8, suffix: "★", label: "Rating", decimals: 1 },
 ]
 
 export function StatsSection() {
   return (
-    <section id="stats" className="bg-primary py-20 md:py-28">
+    <section id="stats" className="bg-[#f4f2ee] py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <BlurFade inView>
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-primary-foreground md:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-[#1a1a1a] md:text-4xl">
               FixForge in Numbers
             </h2>
-            <p className="mt-4 text-lg text-primary-foreground/70">
+            <p className="mt-4 text-lg text-[#4a4540]">
               Trusted by factories across eastern India.
             </p>
           </div>
@@ -38,12 +38,12 @@ export function StatsSection() {
           {stats.map((stat, i) => (
             <BlurFade key={stat.label} inView delay={0.1 + i * 0.1}>
               <div className="flex flex-col items-center gap-3 text-center">
-                <stat.icon className="h-8 w-8 text-primary-foreground/70" />
-                <span className="text-4xl font-bold text-primary-foreground md:text-5xl">
+                <stat.icon className="h-8 w-8 text-[#d4782a]" />
+                <span className="text-4xl font-bold text-[#1a1a1a] md:text-5xl">
                   <NumberTicker value={stat.value} decimalPlaces={stat.decimals ?? 0} />
                   {stat.suffix}
                 </span>
-                <p className="text-sm text-primary-foreground/70">{stat.label}</p>
+                <p className="text-sm text-[#4a4540]">{stat.label}</p>
               </div>
             </BlurFade>
           ))}

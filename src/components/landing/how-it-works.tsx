@@ -45,14 +45,14 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-muted/30 py-20 md:py-28">
+    <section id="how-it-works" className="bg-[#f4f2ee] py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <BlurFade inView>
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-[#1a1a1a] md:text-4xl">
               How It Works
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-[#4a4540]">
               Three simple steps to get your factory back online.
             </p>
           </div>
