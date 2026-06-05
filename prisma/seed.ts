@@ -2,6 +2,13 @@ import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth'
 
 async function main() {
+  // Clean existing data
+  await prisma.callLog.deleteMany()
+  await prisma.job.deleteMany()
+  await prisma.user.deleteMany()
+  await prisma.technician.deleteMany()
+  await prisma.factory.deleteMany()
+
   // Create Factories
   const tataSteelJsr = await prisma.factory.create({
     data: { name: 'Tata Steel Jamshedpur', address: 'Main Plant Road, Bistupur', city: 'Jamshedpur', phone: '+91-657-2341000' },

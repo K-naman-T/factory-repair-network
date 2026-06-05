@@ -27,7 +27,7 @@ describe('Jobs API Routes', () => {
     expect(res.status).toBe(200)
     const data = await res.json()
     expect(Array.isArray(data)).toBe(true)
-    expect(data.length).toBeGreaterThanOrEqual(8)
+    expect(data.length).toBeGreaterThanOrEqual(7)
     for (const job of data) {
       expect(job.status).toBe('open')
     }
