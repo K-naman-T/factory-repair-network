@@ -20,7 +20,7 @@ colors:
   text-muted-on-dark: "#9e9790"
   success: "#2d7d46"
   error: "#c62828"
-  badge-severity: "#c62828"
+  badge-urgent: "#c62828"
 typography:
   heading: "Plus Jakarta Sans, system-ui, sans-serif"
   body: "Plus Jakarta Sans, system-ui, sans-serif"
@@ -64,7 +64,7 @@ A B2B marketplace landing page for Indian factory owners and industrial technici
 - Section padding: 120px top/bottom (hero), 96px (features), 64px (stats)
 - Bento grid for "How It Works" — 3 cards with images in background
 - Marquee for feature cards — horizontal auto-scroll
-- Floating stat card on hero image: amber badge with "78.5" severity score
+  - Floating stat card on hero image: amber badge with "24hr" response time
 - Dark footer section: `#141210` background with warm white text
 
 ## Sections
@@ -94,14 +94,14 @@ Left (50%):
 Right (50%):
   - Image in aspect-[4/5] rounded-[16px] overflow-hidden border
   - Gradient overlay from bottom
-  - Floating stat card: absolute bottom-4, backdrop-blur-xl, amber circle with "78.5"
+  - Floating stat card: absolute bottom-4, backdrop-blur-xl, amber circle with "24hr"
 ```
 
 ### Problem section
 ```
 Dark background section #141210 or similar
 Headline: "The Problem" + eyebrow
-Stat: "78.5 Severity Score" in large text
+Stat: "9/10 Factory Owners Affected" in large text
 Pain points: 3 cards with icons — multi-day halts, no marketplace, small manufacturers suffer
 ```
 
@@ -186,7 +186,7 @@ Profile pics: rounded-full, 40px, border-2 border-white (stacked negative margin
 
 ```
 Eyebrow:      rounded-full border px-4 py-1.5 text-[0.6875rem] font-medium uppercase tracking-[0.15em]
-Severity:     bg-[#d4782a] text-white h-12 w-12 rounded-full flex items-center justify-center
+Stat badge:   bg-[#d4782a] text-white h-12 w-12 rounded-full flex items-center justify-center
               text-[1.25rem] font-bold
 Status dot:   h-2 w-2 rounded-full bg-green-500 animate-pulse
 ```

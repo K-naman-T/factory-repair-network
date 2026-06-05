@@ -87,11 +87,11 @@ export function Hero() {
               <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl">
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d4782a]">
-                    <span className="text-[1.25rem] font-bold text-white">78.5</span>
+                    <span className="text-[1.25rem] font-bold text-white">24hr</span>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">Severity Score</p>
-                    <p className="text-xs text-white/70">Industrial Repair Index</p>
+                    <p className="text-sm font-semibold text-white">Average Response</p>
+                    <p className="text-xs text-white/70">Across 5 cities in Jharkhand</p>
                   </div>
                 </div>
               </div>
