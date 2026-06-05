@@ -1,0 +1,127 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { LayoutDashboard, Truck, Users, Building2, Phone, Menu, LogOut } from 'lucide-react'
+import { Toaster } from '@/components/ui/sonner'
+
+const navItems = [
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/dispatch', label: 'Dispatch', icon: Truck },
+  { href: '/admin/technicians', label: 'Technicians', icon: Users },
+  { href: '/admin/factories', label: 'Factories', icon: Building2 },
+  { href: '/admin/calls', label: 'Call Logs', icon: Phone },
+]
+
+export default function AdminShell({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const [userName, setUserName] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.user) {
+          setUserName(data.user.name)
+          setUserEmail(data.user.email)
+        }
+      })
+      .catch(() => router.push('/login'))
+  }, [router])
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+  }
+
+  const initials = userName
+    ? userName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'A'
+
+  const sidebar = (
+    <div className="flex h-full flex-col gap-4 py-4">
+      <div className="px-4">
+        <h2 className="text-lg font-semibold tracking-tight">FixForge</h2>
+        <p className="text-xs text-muted-foreground">Admin Panel</p>
+      </div>
+      <Separator />
+      <nav className="flex flex-1 flex-col gap-1 px-2">
+        {navItems.map((item) => {
+          const Icon = item.icon
+          const active = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                active
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              }`}
+            >
+              <Icon className="size-4" />
+              {item.label}
+            </Link>
+          )
+        })}
+      </nav>
+      <Separator />
+      <div className="px-4">
+        <p className="text-xs text-muted-foreground">{userEmail}</p>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      <Toaster />
+      <aside className="hidden w-56 shrink-0 border-r bg-card md:block">
+        {sidebar}
+      </aside>
+
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent side="left" className="w-56 p-0">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          {sidebar}
+        </SheetContent>
+      </Sheet>
+
+      <div className="flex flex-1 flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-card px-4 md:px-6">
+          <SheetTrigger className="md:hidden inline-flex items-center justify-center rounded-lg hover:bg-muted size-8 shrink-0">
+            <Menu className="size-5" />
+            <span className="sr-only">Toggle navigation</span>
+          </SheetTrigger>
+
+          <div className="flex flex-1 items-center gap-2">
+            <h1 className="text-sm font-semibold tracking-tight">Admin</h1>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Avatar className="size-8">
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+              <span className="hidden text-sm font-medium sm:inline">{userName || 'Loading...'}</span>
+            </div>
+            <Button variant="ghost" size="icon-sm" onClick={handleLogout}>
+              <LogOut className="size-4" />
+              <span className="sr-only">Logout</span>
+            </Button>
+          </div>
+        </header>
+
+        <main className="flex-1 p-4 md:p-6">{children}</main>
+      </div>
+    </div>
+  )
+}
