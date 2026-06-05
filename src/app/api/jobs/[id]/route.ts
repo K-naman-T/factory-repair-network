@@ -29,7 +29,24 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json()
-    const { status, technicianId, cost } = body
+    const { status, technicianId, cost, urgency } = body
+
+    const validStatuses = ['open', 'assigned', 'in_progress', 'resolved']
+    const validUrgencies = ['low', 'normal', 'high', 'critical']
+
+    if (status && !validStatuses.includes(status)) {
+      return NextResponse.json(
+        { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
+        { status: 400 }
+      )
+    }
+
+    if (body.urgency && !validUrgencies.includes(body.urgency)) {
+      return NextResponse.json(
+        { error: `Invalid urgency. Must be one of: ${validUrgencies.join(', ')}` },
+        { status: 400 }
+      )
+    }
 
     const existing = await prisma.job.findUnique({ where: { id: Number(id) } })
     if (!existing) {
@@ -40,6 +57,7 @@ export async function PUT(
     if (status !== undefined) data.status = status
     if (technicianId !== undefined) data.technicianId = technicianId
     if (cost !== undefined) data.cost = cost
+    if (urgency !== undefined) data.urgency = urgency
     if (status === 'resolved') {
       data.resolvedAt = new Date()
     }

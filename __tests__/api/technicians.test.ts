@@ -51,6 +51,39 @@ describe('Technicians API Routes', () => {
     }
   })
 
+  it('POST /api/technicians should create a new technician', async () => {
+    const res = await fetch(`${baseURL}/api/technicians`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Test Technician',
+        specialty: 'HVAC',
+        city: 'Mumbai',
+        phone: '9999999999',
+      }),
+    })
+    expect(res.status).toBe(201)
+    const data = await res.json()
+    expect(data).toHaveProperty('id')
+    expect(data.name).toBe('Test Technician')
+    expect(data.specialty).toBe('HVAC')
+    expect(data.city).toBe('Mumbai')
+    expect(data.phone).toBe('9999999999')
+    expect(data.available).toBe(true)
+    expect(data.rating).toBe(4.5)
+  })
+
+  it('POST /api/technicians should return 400 for missing fields', async () => {
+    const res = await fetch(`${baseURL}/api/technicians`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Incomplete' }),
+    })
+    expect(res.status).toBe(400)
+    const data = await res.json()
+    expect(data).toHaveProperty('error')
+  })
+
   it('PUT /api/technicians/[id] should update a technician', async () => {
     const res = await fetch(`${baseURL}/api/technicians/1`, {
       method: 'PUT',

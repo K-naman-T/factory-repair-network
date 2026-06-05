@@ -30,11 +30,36 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { factoryId, specialtyNeeded, description, urgency, technicianId } = body
+    const { factoryId, specialtyNeeded, description, status, urgency, technicianId } = body
 
     if (!factoryId || !specialtyNeeded || !description) {
       return NextResponse.json(
         { error: 'factoryId, specialtyNeeded, and description are required' },
+        { status: 400 }
+      )
+    }
+
+    const validStatuses = ['open', 'assigned', 'in_progress', 'resolved']
+    const validUrgencies = ['low', 'normal', 'high', 'critical']
+
+    if (status && !validStatuses.includes(status)) {
+      return NextResponse.json(
+        { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
+        { status: 400 }
+      )
+    }
+
+    if (urgency && !validUrgencies.includes(urgency)) {
+      return NextResponse.json(
+        { error: `Invalid urgency. Must be one of: ${validUrgencies.join(', ')}` },
+        { status: 400 }
+      )
+    }
+
+    const factory = await prisma.factory.findUnique({ where: { id: factoryId } })
+    if (!factory) {
+      return NextResponse.json(
+        { error: `Factory with id ${factoryId} not found` },
         { status: 400 }
       )
     }
